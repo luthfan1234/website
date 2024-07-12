@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEM SV</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #FFA500 0%, #FF4500 100%);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      color: #FFFFFF;
+      font-family: 'Mulish', sans-serif;
+    }
+
+    #myChart {
+      max-width: 300px;
+      max-height: 300px;
+      margin-bottom: 2rem;
+    }
+
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 75vw;
+      height: 100vh;
+    }
+
+    .chart-label {
+      margin-top: 1rem;
+      position: relative;
+      color: #FFF;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    
+    .bubble {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.1));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .bubble:nth-child(1) {
+      top: 10%;
+      left: 15%;
+      animation-duration: 7s;
+    }
+
+    .bubble:nth-child(2) {
+      top: 20%;
+      left: 70%;
+      width: 300px;
+      height: 300px;
+      animation-duration: 5s;
+    }
+
+    .bubble:nth-child(3) {
+      top: 60%;
+      left: 40%;
+      width: 150px;
+      height: 150px;
+      animation-duration: 9s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0);
+      }
+      50% {
+        transform: translateY(-20px) translateX(10px);
+      }
+      100% {
+        transform: translateY(0) translateX(0);
+      }
+    }
+
+    .carousel-container {
+      position: relative;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #FFA500;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      color: white;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-button:hover {
+      background-color: #FF4500;
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    #prev {
+      left: 20px;
+    }
+
+    #next {
+      right: 20px;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+      }
+
+      .carousel-button {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .section {
+      padding: 50px 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+      margin: 4px 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      padding: 10px 20px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .button-glass {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: white;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .button-glass:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .carousel-button {
+        display: none;
+      }
+
+      .glass-effect {
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      .chart-container {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid-cols-3 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+
+      .carousel-container {
+        display: none;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+
+<body class="min-h-[200vh] text-[#FFFFFF]">
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <!-- NAVBAR -->
+  <nav>
+    <a class="flex title-font font-medium items-center mb-4 md:mb-0" href="#home">
+      <img src="./Asset/ABHITARACROP (2).png" class="h-20" alt="Favicon">
+    </a>
+    <div class="hamburger" id="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="index.php#home">Home</a>
+      <a href="#info">Informasi</a>
+      <a href="#visi_misi">Visi dan Misi</a>
+      <a href="#contact">Kontak</a>
+    </div>
+  </nav>
+
+  <!-- SECTION 1 -->
+  <div id="home" class="min-h-screen pt-[0.5rem] relative flex flex-col items-center mx-20 section">
+    <div class="relative gap-10 flex w-full justify-center items-center mt-10">
+      <div class="h-[0.01rem] bg-black opacity-[0.1] w-full"></div>
+      <div class="relative">
+        <h1 id="about" class="text-7xl font-black absolute scale-y-[1.5] blur-[2rem]"></h1>
+        <h1 class="text-6xl font-black whitespace-nowrap">
+          <span class="text-6xl font-black leading-[3rem]">Pengetahuan Pergerakan</span>
+        </h1>
+      </div>
+      <div class="h-[0.01rem] bg-black opacity-[0.1] w-full whitespace-nowrap"></div>
+    </div>
+    <div class="mt-20 flex items-center justify-center gap-[4rem] w-full flex-wrap">
+      <div class="h-[30rem] w-[20rem] relative">
+        <div class="w-full h-full bg-[#FFFFFF] rounded-[3rem] p-[0.1rem] drop-shadow-xl z-[0] absolute blur-[5rem]"></div>
+        <div class="w-full h-full bg-[#FFFFFF] rounded-[3rem] p-[0.1rem] drop-shadow-xl z-[2]">
+          <img src="./Asset/pp7.png" class="w-full h-full object-cover rounded-[3rem] opacity-[0.9] transform scale-90" alt="">
+        </div>
+      </div>
+      <div class="w-full md:w-[50rem] flex flex-col items-end text-right">
+        <p class="text-2xl text-left z-[2]">
+        • Bola dunia melambangkan keterhubungan dan potensi dampak gerakan mahasiswa. Mahasiswa bisa mempengaruhi isu dan gerakan yang global tidak hanya dalan lingkup kampus, serta dapat terinformasi oleh peristiwa yang terjadi. <br>
+• Simbol orang bermakna rasa kebersamaan dalam penegakan keadilan.<br>
+• Buku adalah simbol pengetahuan dan pembelajaran yang sudah dikenal luas, pergerakan yang didasarkan akan pengetahuan. Gerakan mahasiswa didorong oleh keinginan akan keadilan sosial dan pencerdasan isu.<br>
+• Biru dan Orange Warna-warna ini dapat mewakili kecerdasan (biru), semangat dan keberanian (orange).<br>
+• Secara keseluruhan, logo tersebut bisa mewakili gagasan bahwa gerakan mahasiswa didorong oleh pengetahuan dan keinginan untuk mengubah ketidak adilan.<br>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full max-w-4xl px-8 py-6 glass-effect mx-auto" style="border-radius: 2rem;" data-aos="fade-up">
+    <h2 class="text-4xl font-bold text-center mt-4 mb-4">Program Kerja</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="glass-effect p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold mb-4">Aksi Kreatif Dan Propaganda</h3>
+        <p> • Konsolidasi dan Aksi <br>
+        • Action Class<br>
+        • Propaganda Kreatif<br>
+        • BERANTAI (Berbincang Santai)<br>
+          </p>
+      </div>
+      <div class="glass-effect p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold mb-4">Analisis Kebijakan Kampus Perguruan Tinggi Vokasi</h3>
+        <p> • Kelas Kajian Vol 1 dan Vol 2 <br>
+        • Kawal MBKM<br>
+        • Studi Banding<br>
+        • Kawal Isu<br>
+          </p>
+      </div>
+      <div class="glass-effect p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold mb-4">Analisis Kebijakan Publik</h3>
+        <p> • Kelas Kajian Vol 1 dan Vol 2 <br>
+        • Investigasi Solo Raya<br>
+        • Vokasi Beraksi<br>
+        • Vokasi Menilik<br>
+          </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Section -->
+  <div id="info" class="carousel-container section" data-aos="fade-up">
+    <div class="glass-effect p-8" style="border-radius: 2rem; width: 80%; height: 500px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+      <div class="chart-container">
+        <div class="text-4xl font-bold text-center mt-4 mb-4 chart-label">Keanggotaan <br> Kementrian Pengetahuan Pergerakan </div>
+        <canvas id="myChart" data-aos="fade"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Carousel -->
+  <div class="carousel-container section" data-aos="fade-up">
+    <div class="glass-effect p-8" style="border-radius: 2rem;">
+      <h2 class="text-4xl font-bold text-center mb-4">Dokumentasi Proker</h2>
+      <div class="relative flex items-center justify-center">
+        <button id="prev" class="carousel-button">
+          &#x276E; <!-- Simbol panah kiri -->
+        </button>
+        <div id="carousel" class="flex overflow-hidden w-[500px] h-[500px] items-center justify-center gap-4">
+          <div class="flex flex-col items-center justify-center">
+            <img src="./Asset/pdm1.png" class="w-full h-full object-cover rounded-lg" alt="carousel1">
+            <p class="mt-2 text-xl font-semibold text-[#FFFFFF]">PDM SV</p>
+            <p class="text-lg text-white">1 Juli 2024</p>
+          </div>
+          <div class="flex flex-col items-center justify-center hidden">
+            <img src="./Asset/pdm2.png" class="w-full h-full object-cover rounded-lg" alt="carousel2">
+            <p class="mt-2 text-xl font-semibold text-[#FFFFFF]">PDM SV</p>
+            <p class="text-lg text-white">29 Juli 2024</p>
+          </div>
+          <div class="flex flex-col items-center justify-center hidden">
+            <img src="./Asset/forkom.png" class="w-full h-full object-cover rounded-lg" alt="carousel3">
+            <p class="mt-2 text-xl font-semibold text-[#FFFFFF]">Forkom</p>
+            <p class="text-lg text-white">29 Juli 2024</p>
+          </div>
+        </div>
+        <button id="next" class="carousel-button">
+          &#x276F; <!-- Simbol panah kanan -->
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="contact" class="text-[#99061B] body-font mt-20 section" data-aos="fade-up">
+    <div class="container px-32 py-24 mx-auto flex md:items-center lg:items-start md:flex-row md:flex-nowrap flex-wrap flex-col">
+      <div class="w-64 flex-shrink-0 md:mx-0 mx-auto text-center md:text-left">
+        <a class="flex title-font font-medium items-center md:justify-start justify-center text-white">
+          <img src="./Asset/BEMSV.png" class="h-16" alt="">
+          <span class="text-4xl">BEM SV</span>
+        </a>
+        <p class="mt-2 text-sm text-white">
+          Jl. Ir. Sutami No.36 A, Kentingan, Jebres, Surakarta, Jawa Tengah 57126
+        </p>
+      </div>
+      <div class="flex-grow flex flex-wrap md:pl-20 -mb-10 md:mt-0 mt-10 md:text-left text-center">
+        <div class="lg:w-1/3 md:w-1/2 w-full px-4">
+          <h2 id="contact" class="title-font font-medium text-white tracking-widest text-sm mb-3">
+            Contact Us
+          </h2>
+          <nav class="list-none mb-10">
+            <li>
+              <a class="text-white hover:text-[#99061B]">vokasiuns@gmail.com</a>
+            </li>
+            <li>
+              <a class="text-white hover:text-[#99061B]">+6282138540196</a>
+            </li>
+          </nav>
+        </div>
+        <div class="lg:w-1/3 md:w-1/2 w-full px-4">
+          <h2 class="title-font font-medium text-white tracking-widest text-sm mb-3">
+            Other
+          </h2>
+          <nav class="list-none mb-10">
+            <li>
+              <a class="text-white hover:text-[#99061B]">Privacy & Policy</a>
+            </li>
+            <li>
+              <a class="text-white hover:text-[#99061B]">Terms & Condition</a>
+            </li>
+          </nav>
+        </div>
+        <div class="lg:w-1/3 md:w-1/2 w-full px-4">
+          <h2 class="title-font font-medium text-white tracking-widest text-sm mb-3">
+            Badan Eksekutif Mahasiswa Fakultas Sekolah Vokasi
+          </h2>
+          <nav class="list-none mb-10">
+            <li>
+              <a class="text-white hover:text-[#99061B]">Copyright ©️ 2024 All rights reserved</a>
+            </li>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="">
+      <div class="container mx-auto py-4 px-5 flex flex-wrap flex-col sm:flex-row">
+        <p class="text-white text-sm text-center sm:text-left">
+          ©️ 2024 BEM SV —
+          <a href="https://www.instagram.com/bemsvuns" rel="noopener noreferrer" class="text-white ml-1" target="_blank">@bemsvuns</a>
+        </p>
+        <span class="inline-flex sm:ml-auto sm:mt-0 mt-2 justify-center sm:justify-start">
+          <a href="https://www.facebook.com/bemsvuns" class="text-white" target="_blank">
+            <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+            </svg>
+          </a>
+          <a href="https://twitter.com/vokasiuns" class="ml-3 text-white" target="_blank">
+            <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+              <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/bemsvuns" class="ml-3 text-white" target="_blank">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/school/bemsvuns" class="ml-3 text-white" target="_blank">
+            <svg fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="0" class="w-5 h-5" viewBox="0 0 24 24">
+              <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+              <circle cx="4" cy="4" r="2" stroke="none"></circle>
+            </svg>
+          </a>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Include AOS library -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const links = document.querySelectorAll('nav a');
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('nav-links');
+
+      links.forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+
+      hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+      });
+
+      const prevButton = document.getElementById('prev');
+      const nextButton = document.getElementById('next');
+      const carousel = document.getElementById('carousel');
+      const images = carousel.querySelectorAll('div');
+      let currentIndex = 0;
+
+      function showImage(index) {
+        images.forEach((img, i) => {
+          img.classList.toggle('hidden', i !== index);
+        });
+      }
+
+      prevButton.addEventListener('click', () => {
+        currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
+        showImage(currentIndex);
+      });
+
+      nextButton.addEventListener('click', () => {
+        currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
+        showImage(currentIndex);
+      });
+
+      showImage(currentIndex);
+    });
+
+    // Script Chart
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const data = {
+      labels: ['Sekretaris Kabinet (10 anggota)', 'Keuangan Kabinet (20 anggota)', 'Pengendali Internal (30 anggota)'],
+      datasets: [{
+        data: [10, 20, 30],
+        backgroundColor: ['#99FFCC', '#FFFFCC', '#FF99CC'],
+        borderWidth: 0,
+        hoverOffset: 4,
+      }]
+    };
+
+    const options = {
+      cutout: '70%',
+      plugins: {
+        legend: {
+          display: false
+        },
+      }
+    };
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: data,
+      options: options
+    });
+  </script>
+</body>
+</html>
+

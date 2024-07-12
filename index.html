@@ -66,26 +66,51 @@
     }
 
     nav {
-      margin: 0;
-      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 10px 20px;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
     }
 
-    .button-glass {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .nav-links a {
+      text-decoration: none;
       color: white;
       padding: 10px 20px;
-      font-size: 1rem;
-      font-weight: bold;
-      transition: background 0.3s ease, transform 0.3s ease;
+      display: block;
     }
 
-    .button-glass:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
+    .nav-links a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+      margin: 4px 0;
+    }
+
+    .hidden {
+      display: none;
     }
 
     .carousel-container {
@@ -132,32 +157,71 @@
         flex-direction: column;
       }
 
-      .carousel-button {
-        opacity: 0;
-        pointer-events: none;
+      .hamburger {
+        display: flex;
       }
+
+      .nav-links {
+        flex-direction: column;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      .nav-links.open {
+        max-height: 500px;
+      }
+
+      .carousel-button {
+        display: none;
+      }
+
+      .button-glass {
+        font-size: 0.8rem;
+        padding: 8px 16px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
     }
   </style>
 </head>
 
 <body class="min-h-[200vh] text-[#FFFFFF]">
   <!-- NAVBAR -->
-  <nav class="boody-font mx- lg:w flex flex-wrap p-5 flex-col md:flex-row items-center">
+  <nav>
     <a class="flex title-font font-medium items-center mb-6 md:mb-0" href="#home">
       <img src="./Asset/ABHITARACROP (2).png" class="h-20" alt="Favicon" />
     </a>
-    <div class="md:ml-auto md:mr-16 flex flex-wrap items-center text-base justify-center px-5 rounded-full">
-      <a href="#home" class="px-3 md:px-7 md:text-xl h-full py-3">Beranda</a>
-      <a href="#info" class="px-3 md:px-7 md:text-xl h-full py-3">Informasi</a>
-      <a href="#visi" class="px-3 md:px-7 md:text-xl h-full py-3">Visi dan Misi</a>
-      <a href="#contact" class="px-3 md:px-7 md:text-xl h-full py-3">Kontak</a>
+    <div class="hamburger" id="hamburger">
+      <div></div>
+      <div></div>
+      <div></div>
     </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home">Beranda</a></li>
+      <li><a href="#info">Informasi</a></li>
+      <li><a href="#visi">Visi dan Misi</a></li>
+      <li><a href="#contact">Kontak</a></li>
+    </ul>
   </nav>
 
   <!-- SECTION 1 -->
   <div id="home" class="h-[100vh] flex items-center justify-center bg-cover bg-center relative section" style="background-image: url('./Asset/1.jpeg');" data-aos="fade-up">
     <div class="absolute inset-0 bg-black opacity-50"></div>
-    <div class="relative z-10 text-center text-white">
+    <div class="relative z-10 text-center text-white" data-aos="fade-up">
       <h1 class="text-6xl font-black">Badan Eksekutif Mahasiswa</h1>
       <h2 class="text-5xl mt-4">Sekolah Vokasi Universitas Sebelas Maret</h2>
       <h3 class="text-4xl mt-2">Kabinet Abhisatya Bimantara</h3>
@@ -212,7 +276,7 @@
       </div>
       <div class="h-[0.01rem] bg-black opacity-[0.1] w-full"></div>
     </div>
-    <div class="flex flex-col items-center bg-white p-10 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='deputi.html'" data-aos="fade-up">
+    <div class="flex flex-col items-center bg-white p-10 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='deputikabinet.html'" data-aos="fade-up">
       <img src="./Asset/deputi-kabinet.png" alt="Deputi Kabinet" class="w-32 h-32 object-contain">
       <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Deputi Kabinet</p>
     </div>
@@ -227,33 +291,33 @@
       <div class="h-[0.01rem] bg-black opacity-[0.1] w-full"></div>
     </div>
     <div class="grid grid-cols-3 gap-6 mb-10">
-      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='halaman-lain.html'" data-aos="fade-up">
+      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='kemahasiswaan.html'" data-aos="fade-up">
         <img src="./Asset/kemahasiswaan.png" alt="Kemahasiswaan" class="w-32 h-32 object-contain">
         <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Kemahasiswaan</p>
       </div>
-      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='halaman-lain.html'" data-aos="fade-up">
+      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='kesetaraangender.html'" data-aos="fade-up">
         <img src="./Asset/keder.png" alt="Kesetaraan Gender" class="w-32 h-32 object-contain">
         <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Kesetaraan Gender</p>
       </div>
-      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='halaman-lain.html'" data-aos="fade-up">
+      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='relasiexsternal.html'" data-aos="fade-up">
         <img src="./Asset/renals.png" alt="Renals" class="w-32 h-32 object-contain">
         <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Relasi Eksternal</p>
       </div>
     </div>
     <div class="grid grid-cols-4 gap-6">
-      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='halaman-lain.html'" data-aos="fade-up">
+      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='kriya.html'" data-aos="fade-up">
         <img src="./Asset/kriya.png" alt="Kriya" class="w-32 h-32 object-contain">
         <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Kreasi Karya dan Potensi Mahasiswa</p>
       </div>
-      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='halaman-lain.html'" data-aos="fade-up">
+      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='pengetahuanpergerakan.html'" data-aos="fade-up">
         <img src="./Asset/pp.png" alt="PP" class="w-32 h-32 object-contain">
         <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Pengetahuan Pergerakan</p>
       </div>
-      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='halaman-lain.html'" data-aos="fade-up">
+      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='sosialmasyarakat.html'" data-aos="fade-up">
         <img src="./Asset/sosma.png" alt="Sosma" class="w-32 h-32 object-contain">
         <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Sosial Masyarakat</p>
       </div>
-      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='halaman-lain.html'" data-aos="fade-up">
+      <div class="flex flex-col items-center bg-white p-8 rounded-[3rem] shadow-lg mb-10 cursor-pointer glass-effect" onclick="window.location.href='medkom.html'" data-aos="fade-up">
         <img src="./Asset/medkom.png" alt="Medkom" class="w-32 h-32 object-contain">
         <p class="mt-4 text-center text-xl font-semibold text-[#FFA500]">Media Komunikasi</p>
       </div>
@@ -427,6 +491,8 @@
 
     document.addEventListener('DOMContentLoaded', function () {
       const links = document.querySelectorAll('nav a');
+      const hamburger = document.getElementById('hamburger');
+      const navLinks = document.getElementById('nav-links');
 
       links.forEach(link => {
         link.addEventListener('click', function (e) {
@@ -441,6 +507,10 @@
             });
           }
         });
+      });
+
+      hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
       });
 
       const prevButton = document.getElementById('prev');
